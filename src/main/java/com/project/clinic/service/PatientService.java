@@ -2,10 +2,13 @@ package com.project.clinic.service;
 
 import com.project.clinic.DTO.PatientDTO;
 import com.project.clinic.Entity.Patient;
-import com.project.clinic.ModelMapper.PatientMapper;
+import com.project.clinic.ModelMapper.ModelMapper;
+//import com.project.clinic.ModelMapper.PatientMapper;
+import com.project.clinic.exception.PatientNotFoundException;
 import com.project.clinic.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,10 +20,8 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     //create patient
-    public PatientDTO createPatient(PatientDTO dto){
-        Patient patient = PatientMapper.toEntity(dto);
-        Patient saved = patientRepository.save(patient);
-        return PatientMapper.toDto(saved);
+    public PatientDTO createPatient(Patient patient){
+        return ModelMapper.toPaitentDto(patientRepository.save(patient));
     }
 
     //get all
@@ -28,7 +29,7 @@ public class PatientService {
     public List<PatientDTO> getAllPatients(){
         return patientRepository.findAll()
                 .stream()
-                .map(PatientMapper::toDto)
+                .map(ModelMapper::toPaitentDto)
                 .collect(Collectors.toList());
     }
 
@@ -36,29 +37,30 @@ public class PatientService {
 
     public PatientDTO getByPatientId(Long id){
         Patient patient = patientRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("patient id not found"));
-            return PatientMapper.toDto(patient);
+            .orElseThrow(() -> new PatientNotFoundException("patient id not found"));
+            return ModelMapper.toPaitentDto(patient);
 
 
     }
     //update patient
 
-    public PatientDTO updatePatient(Long id, PatientDTO dto){
+    public PatientDTO updatePatient(Long id, Patient patient){
         Patient existing = patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not found"));
+                .orElseThrow(() -> new PatientNotFoundException("patient not found"));
 
-        existing.setName(dto.getName());
-        existing.setEmail(dto.getEmail());
-        existing.setPhone(dto.getPhone());
+        existing.setName(patient.getName());
+        existing.setEmail(patient.getEmail());
+        existing.setPhone(patient.getPhone());
 
         Patient updated = patientRepository.save(existing);
-        return PatientMapper.toDto(updated);
+        return ModelMapper.toPaitentDto(updated);
     }
 
     //delete patient
 
-    public String deletePatient(Long id){
+    public void deletePatient(long id){
+        Patient patient = patientRepository.findById(id).orElseThrow(()-> new PatientNotFoundException("patient id not found"));
         patientRepository.deleteById(id);
-        return "patient deleted successfully";
+
     }
 }

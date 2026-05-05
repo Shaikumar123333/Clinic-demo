@@ -8,5 +8,5 @@ public class PatientDTO {
     private Long id;
     private String name;
     private String email;
-    private String Phone;
+    private String phone;
 }
