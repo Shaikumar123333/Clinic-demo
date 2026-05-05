@@ -3,9 +3,11 @@ package com.project.clinic.ModelMapper;
 import com.project.clinic.DTO.AppointmentRes;
 import com.project.clinic.DTO.DoctorDTO;
 import com.project.clinic.DTO.PatientDTO;
+import com.project.clinic.DTO.UserDTO;
 import com.project.clinic.Entity.Appointment;
 import com.project.clinic.Entity.Doctor;
 import com.project.clinic.Entity.Patient;
+import com.project.clinic.Entity.Users;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -44,5 +46,12 @@ public class ModelMapper {
         res.setLocalDateTime(appointment.getLocalDateTime());
         res.setId(appointment.getId());
         return res;
+    }
+    public static UserDTO toUserDTO(Users user){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setName(user.getName());
+        userDTO.setEmail(user.getEmail());
+        return userDTO;
     }
 }
