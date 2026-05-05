@@ -29,7 +29,7 @@ public class GlobalException {
     }
     @ExceptionHandler(AppointmentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAppointmentNotFound(AppointmentNotFoundException e ,HttpServletRequest req){
-        logger.warn("Patient Not Found {} | PathVariable {}",e.getMessage(),req.getRequestURI());
+        logger.warn("Appointment Not Found {} | PathVariable {}",e.getMessage(),req.getRequestURI());
         ErrorResponse error = new ErrorResponse("Not found", 404, LocalDateTime.now(), e.getMessage(), req.getRequestURI());
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
